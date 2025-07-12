@@ -66,7 +66,7 @@ def priority_calculator(expression):
                 is_divided_by_zero(float(operand2), float(operand1), element)
             except ValueError:
                 print("Error: Division by zero.")
-                exit(1)
+                raise ValueError
             num_stack.append(calc(float(operand2), float(operand1), element))
     return float(num_stack.pop())
 
@@ -96,7 +96,7 @@ def input_organizer(_inputs, ops):
                 else:
                     break
             res += temp + " "
-    return res
+    return res.rstrip()
 
 def check_numerics(_inputs, ops) -> bool:
     for element in _inputs:
@@ -125,7 +125,11 @@ def main():
         except ValueError:
             print('Invalid input. (ex: 5 + 4 / 2 * 1)')
     postfix_expression = to_postfix(splitted)
-    res = priority_calculator(postfix_expression)
+    try:
+        res = priority_calculator(postfix_expression)
+    except ValueError:
+        print("Invalid input.")
+        return
     print(f'Result: {res}')
 
 if __name__ == '__main__':
