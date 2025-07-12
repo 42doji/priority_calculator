@@ -74,7 +74,7 @@ def bracket_handler(splitted) -> bool:
     bracket_stack = []
     for element in splitted:
         if element == '(':
-            bracket_stack().append(element)
+            bracket_stack.append(element)
         elif element == ')':
             if bracket_stack.pop() != '(':
                 return False
@@ -86,21 +86,34 @@ def input_organizer(_inputs, ops):
     _inputs = _inputs.strip()
     res = ""
     for idx, element in enumerate(_inputs):
-        if is_operator(element):
-            res += element
+        if is_operator(element, ops):
+            res += element + " "
         else:
             temp = ""
-            for element in range(idx, len(_inputs)):
-                if not is_operator(element):
-                    temp += element
-            res += temp
+            for j in range(idx, len(_inputs)):
+                if not is_operator(_inputs[j], ops):
+                    temp += _inputs[j]
+                else:
+                    break
+            res += temp + " "
+    return res
+
+def check_numerics(_inputs, ops) -> bool:
+    for element in _inputs:
+        if is_operator(element, ops) == False:
+            if not element.isnumeric():
+                return False
+    return True
+
 def input_hanlder():
     ops = "+-/*()"
     _inputs = input('Enter expression: ')
-    input_organizer(_inputs)
+    _inputs = input_organizer(_inputs, ops).split()
     if len(_inputs) < 2:
         raise ValueError
     if bracket_handler(_inputs) == False:
+        raise ValueError
+    if not check_numerics(_inputs, ops):
         raise ValueError
     return _inputs
 
